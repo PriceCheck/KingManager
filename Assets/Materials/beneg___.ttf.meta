@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 92f1aed76132abd4db1c3551937bd92e
+timeCreated: 1484873549
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Benegraphic
+  fontNames:
+  - Benegraphic
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
