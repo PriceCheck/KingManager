@@ -12,9 +12,10 @@ public class Raycaster : MonoBehaviour {
         {
             if (LastObjectHit != hit.collider.gameObject)
             {
-                if(LastObjectHit != null && LastObjectHit.GetComponent<MainMenuButton>())
+                if(LastObjectHit != null)
                 {
-                    LastObjectHit.GetComponent<MainMenuButton>().IsHighlit();
+                    if(LastObjectHit.GetComponent<MainMenuButton>())
+                         LastObjectHit.GetComponent<MainMenuButton>().IsHighlit();
                 }
                 if(hit.collider.gameObject.GetComponent<MainMenuButton>())
                 {

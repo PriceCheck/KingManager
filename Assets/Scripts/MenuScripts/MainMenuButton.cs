@@ -19,6 +19,9 @@ public class MainMenuButton : MonoBehaviour {
     public AnimationCurve MoveUpMotion = AnimationCurve.EaseInOut(0,0,1,1);
     public AnimationCurve MoveDownMotion = AnimationCurve.EaseInOut(0,0,1,1);
     public Vector3 MoveDelta = new Vector3(0, 1, 0);
+    public GameObject ObjectToMove;
+    float ColorFillAnimationTime = 0.15f;
+    public float ColorTime = 0;
 
     readonly float slowdownFactor = 2;
     AnimationCurve CurrentCurve;
@@ -32,7 +35,7 @@ public class MainMenuButton : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         TextHighlightStart = TextHighlight.color;
-        StartingPosition = transform.position;
+        StartingPosition = ObjectToMove.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -43,13 +46,16 @@ public class MainMenuButton : MonoBehaviour {
     void CleanUp()
     {
         CurrentCoroutine = null;
-
         Color CurrentColor = TextHighlightStart;
         Vector3 finalPosition = transform.position;
+
+        //Clamp Values
         finalPosition.y = Mathf.Clamp(finalPosition.y, StartingPosition.y, StartingPosition.y + MoveDelta.y);
         time = Mathf.Clamp(time, 0, AnimationTime);
-        InscriptionHighlight.fillAmount = time / AnimationTime;
-        CurrentColor.a = time / AnimationTime;
+        ColorTime = Mathf.Clamp(ColorTime, 0, ColorFillAnimationTime);
+        //Set to end values
+        InscriptionHighlight.fillAmount = ColorTime / ColorFillAnimationTime;
+        CurrentColor.a = ColorTime / ColorFillAnimationTime;
         TextHighlight.color = CurrentColor;
     }
 
@@ -60,19 +66,23 @@ public class MainMenuButton : MonoBehaviour {
         while(time >= 0 && time <= AnimationTime)
         {
             yield return null;
-            InscriptionHighlight.fillAmount = time / AnimationTime;
-            CurrentColor.a = time / AnimationTime;
+            InscriptionHighlight.fillAmount = ColorTime / ColorFillAnimationTime;
+            CurrentColor.a = ColorTime / ColorFillAnimationTime;
             TextHighlight.color = CurrentColor;
-            time += Time.deltaTime * DTmultiplier;
+            time += Time.smoothDeltaTime * DTmultiplier;
+            ColorTime += Time.smoothDeltaTime * DTmultiplier;
+            ColorTime = Mathf.Clamp(ColorTime, 0, ColorFillAnimationTime);
             MoveTowards(StartingPosition +
             MoveDelta * CurrentCurve.Evaluate(time / AnimationTime));
         }
         CleanUp();
     }
    
+    
+
     void MoveTowards(Vector3 Destination)
     {
-        transform.position = ((transform.position * (slowdownFactor - 1)) + Destination) / slowdownFactor;
+        ObjectToMove.transform.position = ((ObjectToMove.transform.position * (slowdownFactor - 1)) + Destination) / slowdownFactor;
     }
 
     public void IsHighlit()

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: ed1d8024c43d2fc47951cdcb4574924e
+timeCreated: 1485903872
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Copyshop
+  fontNames:
+  - Copyshop
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
