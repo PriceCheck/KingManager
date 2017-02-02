@@ -106,33 +106,49 @@ public class UnitStatsImporter {
                 file.Write("),");
             }
             file.Write("\n\t};");
-
+            file.Write ("\n" + serializeFunction(1, TokenArray[0]));
             //End of File
             file.Write("\n}");
             //file.Write();
-            /*
-            using UnityEngine;
-            using System.Collections;
-
-enum UnitType { Test, Test2, Length };
-
-public static class StatsReference {
-    >public struct UnitStats
-    {
-        public int HP = 0;
-        public UnitStats(int HP_)
-        {
-            HP = HP_;
-        }
-    }
-
-    static readonly UnitStats[] UnitStatsArray = new UnitStats[]
-         { new UnitStats(0) };
-}
-*/
 
         }
       //  print("File Written Successfully!");
+    }
+    //Wrap in quotes
+    static string WIP(string input)
+    {
+        return "\"" + input + "\"";
+    }
+
+    //Break this into different static functions
+
+    static string serializeFunction(int Tabs, string[] VariableNames)
+    {
+        string output = "";
+        string tabs = "";
+        for (int i = 0; i < Tabs; ++i)
+        {
+            tabs += "\t";
+        }
+        output = tabs + "public static string serializeStats(UnitStats stats, UnitType type) {\n";
+        output += tabs + "\t return" + WIP("{") + " + type + \n";
+        for (int i = 0; i < VariableNames.Length; ++i)
+        {
+            output += tabs + "\t" + WIP(",") + " + stats." + StripQuotes(VariableNames[i]) + " + \n";
+        }
+        output += tabs + "\t"+ WIP("}") + ";\n";
+        output += tabs + "}\n";
+
+        return output;
+        /*public static string serializeStats(UnitStats stats, UnitType type)
+        string output = "{" + type + "," + ... + "}";
+
+        return output;*/
+    }
+    static string isEqualFunction(int Tabs, string[] VariableNames)
+    {
+        //TODO: this one
+        return null;
     }
 
 

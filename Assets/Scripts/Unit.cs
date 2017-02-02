@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Unit {
+public class Unit : MonoBehaviour{
     public UnitType type;
     public StatsReference.UnitStats thisUnitStat;
     public UnitVisualizer myVisualizer;
@@ -10,6 +10,16 @@ public class Unit {
     {
         type = thisType;
         thisUnitStat = StatsReference.UnitStatsArray[(int)thisType];
+    }
+
+    //Returns false if the unit is default
+    public bool Serialize(out string output)
+    {
+     //   if(thisUnitStat == StatsReference.UnitStatsArray[(int)type])
+        {
+            output = null;
+            return false;
+        }
     }
 
     public void TakeDamage(int Damage)

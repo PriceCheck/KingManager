@@ -9,7 +9,9 @@ public enum MenuButton
     NewGame,
     LoadGame,
     Settings,
-    Exit
+    Exit,
+    StartGame,
+    ExitGame
 };
 
 public class MainMenuButton : MonoBehaviour {
@@ -20,7 +22,12 @@ public class MainMenuButton : MonoBehaviour {
     public AnimationCurve MoveDownMotion = AnimationCurve.EaseInOut(0,0,1,1);
     public Vector3 MoveDelta = new Vector3(0, 1, 0);
     public GameObject ObjectToMove;
+    public AudioSource ButtonPickup;
+    public AudioSource ButtonDrop;
+    bool CanPlayAudio = false;
+    bool HasGoneAbove = true;
     float ColorFillAnimationTime = 0.15f;
+
     public float ColorTime = 0;
 
     readonly float slowdownFactor = 2;
@@ -46,6 +53,7 @@ public class MainMenuButton : MonoBehaviour {
     void CleanUp()
     {
         CurrentCoroutine = null;
+        CanPlayAudio = false;
         Color CurrentColor = TextHighlightStart;
         Vector3 finalPosition = transform.position;
 
@@ -74,6 +82,11 @@ public class MainMenuButton : MonoBehaviour {
             ColorTime = Mathf.Clamp(ColorTime, 0, ColorFillAnimationTime);
             MoveTowards(StartingPosition +
             MoveDelta * CurrentCurve.Evaluate(time / AnimationTime));
+            if(DTmultiplier == -1)
+            {
+                ClackTest(ObjectToMove.transform.position);
+            }
+           
         }
         CleanUp();
     }
@@ -85,11 +98,32 @@ public class MainMenuButton : MonoBehaviour {
         ObjectToMove.transform.position = ((ObjectToMove.transform.position * (slowdownFactor - 1)) + Destination) / slowdownFactor;
     }
 
+    void ClackTest(Vector3 Position)
+    {
+        if(Vector3.Distance(StartingPosition, Position) < 0.05)
+        {
+            if (HasGoneAbove && ButtonDrop && !ButtonDrop.isPlaying)
+            {
+                ButtonDrop.Play();
+            }
+            HasGoneAbove = false;
+        }
+        else
+        {
+            HasGoneAbove = true;
+        }
+      
+
+
+    }
+
     public void IsHighlit()
     {
         isHighlit = true;
         DTmultiplier = -1;
+        CanPlayAudio = true;
         CurrentCurve = MoveUpMotion;
+
         if (CurrentCoroutine == null)
         {
             CurrentCoroutine = Animation();
@@ -102,6 +136,10 @@ public class MainMenuButton : MonoBehaviour {
     {
         isHighlit = false;
         DTmultiplier = 1;
+        if (ButtonPickup && !ButtonPickup.isPlaying)
+        {
+            ButtonPickup.Play();
+        }
         CurrentCurve = MoveDownMotion;
         if (CurrentCoroutine == null)
         {
@@ -112,9 +150,21 @@ public class MainMenuButton : MonoBehaviour {
 
     public void IsPushed()
     {
-        
-        switch(button)
+        CanPlayAudio = false;
+        switch (button)
         {
+            case (MenuButton.StartGame):
+                {
+                    MessageDispatcher.SendMessage(this, "LEVELS_StartLevelChange", 0,0);
+                    break;
+                }
+            case (MenuButton.ExitGame):
+                {
+                  
+                    MessageDispatcher.SendMessage(this, "LEVELS_StartLevelChange", -1, 0);
+                    break;
+                }
+
             case (MenuButton.NewGame):
                 {
                     //Pan Up & Fade out

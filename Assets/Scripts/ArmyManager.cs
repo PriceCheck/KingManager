@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 [System.Serializable]
@@ -50,7 +49,6 @@ public class ArmyManager : MonoBehaviour {
         } 
         return unitArray.ToArray();
     }
-    [MenuItem("Tools/Run Test Battle")]
     private void NewMenuOption()
     {
         RunBattle();

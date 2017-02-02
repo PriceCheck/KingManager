@@ -36,4 +36,21 @@ public static class StatsReference
 		new UnitStats(5 , 2 , 75 , 1 , 5 , "Foot Solider" , false , true , true ),
 		new UnitStats(2 , 4 , 30 , 1 , 3 , "Archer" , true , true , true ),
 	};
+	public static string serializeStats(UnitStats stats, UnitType type) {
+		 return"{" + type + 
+		"," + stats.Name + 
+		"," + stats.Hit_Points + 
+		"," + stats.Damage + 
+		"," + stats.Accuracy + 
+		"," + stats.Size + 
+		"," + stats.Speed + 
+		"," + stats.Name + 
+		"," + stats.Is_Ranged + 
+		"," + stats.Can_Be_Hit_Ground + 
+		"," + stats.Can_Be_Hit_Ranged + 
+		"}";
+	}
+    
+
+
 }
