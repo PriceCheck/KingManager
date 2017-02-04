@@ -50,7 +50,13 @@ public static class StatsReference
 		"," + stats.Can_Be_Hit_Ranged + 
 		"}";
 	}
-    
-
-
+   /* public static bool isEqual (UnitStats lhs, UnitStats rhs)
+    {
+        if( 
+          //  lhs.Name == rhs.Name &&
+            
+            )
+        { }
+        return false;
+    }*/
 }

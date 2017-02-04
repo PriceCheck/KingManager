@@ -107,6 +107,7 @@ public class UnitStatsImporter {
             }
             file.Write("\n\t};");
             file.Write ("\n" + serializeFunction(1, TokenArray[0]));
+            file.Write(isEqualFunction(1, TokenArray[0]));
             //End of File
             file.Write("\n}");
             //file.Write();
@@ -148,6 +149,28 @@ public class UnitStatsImporter {
     static string isEqualFunction(int Tabs, string[] VariableNames)
     {
         //TODO: this one
+        string output = "";
+        string tabs = "";
+        for (int i = 0; i < Tabs; ++i)
+        {
+            tabs += "\t";
+        }
+        output = tabs + "public static bool isEqual (UnitStats lhs, UnitStats rhs) {\n";
+        output += "if ( lhs." + StripQuotes(VariableNames[0]) + " == rhs." + StripQuotes(VariableNames[0]);
+        for(int i = 1; i < VariableNames.Length; ++i)
+        {
+            output += " && \n" + tabs + "\tlhs." + StripQuotes(VariableNames[i]) + " == rhs." + StripQuotes(VariableNames[i]);
+        }
+        output += ")\n" + tabs + " \t{ return true; } \n" + tabs + "return false;\n" + tabs + "}\n" ;
+        /* public static bool isEqual (UnitStats lhs, UnitStats rhs)
+    {
+        if( 
+          //  lhs.Name == rhs.Name &&
+            
+            )
+        { }
+        return false;
+    }*/
         return null;
     }
 
