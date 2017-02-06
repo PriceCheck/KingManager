@@ -41,14 +41,17 @@ public class UnitStatsImporter {
             file.Write(" " + StripQuotes(TokenArray[NumLines - 1][0]) + ", Length };\n\n");
 
             //Class Starts Here
+            file.WriteLine("[System.Serializable]");
             file.Write("public static class StatsReference\n {\n");
             //Unit Stats Structure
+            file.Write("\n\t [System.Serializable]\n");
             file.Write("\tpublic struct UnitStats {\n");
 
             for (int i = 1; i < TokenArray[0].Length; ++i)
             {
                 file.Write("\t\tpublic " + ReadTokenTypeAsString(TokenArray[1][i]) + " " + StripQuotes(TokenArray[0][i]) + ";\n");
             }
+            
             file.Write("\n\t\tpublic UnitStats(");
             for (int i = 1; i < TokenArray[0].Length; ++i)
             {
@@ -107,7 +110,7 @@ public class UnitStatsImporter {
             }
             file.Write("\n\t};");
             file.Write ("\n" + serializeFunction(1, TokenArray[0]));
-            file.Write(isEqualFunction(1, TokenArray[0]));
+            file.Write("\n" + isEqualFunction(1, TokenArray[0]));
             //End of File
             file.Write("\n}");
             //file.Write();
@@ -122,7 +125,6 @@ public class UnitStatsImporter {
     }
 
     //Break this into different static functions
-
     static string serializeFunction(int Tabs, string[] VariableNames)
     {
         string output = "";
@@ -148,7 +150,6 @@ public class UnitStatsImporter {
     }
     static string isEqualFunction(int Tabs, string[] VariableNames)
     {
-        //TODO: this one
         string output = "";
         string tabs = "";
         for (int i = 0; i < Tabs; ++i)
@@ -161,17 +162,8 @@ public class UnitStatsImporter {
         {
             output += " && \n" + tabs + "\tlhs." + StripQuotes(VariableNames[i]) + " == rhs." + StripQuotes(VariableNames[i]);
         }
-        output += ")\n" + tabs + " \t{ return true; } \n" + tabs + "return false;\n" + tabs + "}\n" ;
-        /* public static bool isEqual (UnitStats lhs, UnitStats rhs)
-    {
-        if( 
-          //  lhs.Name == rhs.Name &&
-            
-            )
-        { }
-        return false;
-    }*/
-        return null;
+        output += ")\n" + tabs + " \t{ return true; } \n" + tabs + "return false;\n" + tabs + "}\n";
+        return output;
     }
 
 
@@ -187,19 +179,19 @@ public class UnitStatsImporter {
         }
         else
         {
-            for(int i = 0; i < input.Length; ++i)
+            for (int i = 0; i < input.Length; ++i)
             {
-                if(input[i] == '.')
+                if (input[i] == '.')
                 {
                     return TokenType.Float;
                 }
             }
             return TokenType.Int;
         }
-       
+
     }
 
-    static string ReadTokenTypeAsString(string input)
+     static string ReadTokenTypeAsString(string input)
     {
         if (input[0] == '\"')
         {
@@ -222,15 +214,15 @@ public class UnitStatsImporter {
         }
     }
 
-    static string StripQuotes(string input)
+     static string StripQuotes(string input)
     {
         return input.Substring(1, input.Length - 2);
     }
 
-    static int StringToInt(string input)
+     static int StringToInt(string input)
     {
         int output = 0;
-        for(int i = 0; i < input.Length; ++i)
+        for (int i = 0; i < input.Length; ++i)
         {
             output *= 10;
             output += input[i] - '0';
@@ -238,13 +230,13 @@ public class UnitStatsImporter {
         return output;
     }
 
-    static float StringToFloat(string input)
+     static float StringToFloat(string input)
     {
         float output = 0;
         int i;
         for (i = 0; i < input.Length; ++i)
         {
-            if(input[i] ==  '.')
+            if (input[i] == '.')
             {
                 ++i;
                 break;
@@ -266,21 +258,21 @@ public class UnitStatsImporter {
         return output;
     }
 
-    static string[] Tokenize(string input, char Delimiter)
+     static string[] Tokenize(string input, char Delimiter)
     {
         List<string> tokens = new List<string>();
         int previousTab = -1;
         int LettersToTake = 0;
-        for(int i = 0; i < input.Length; ++i)
+        for (int i = 0; i < input.Length; ++i)
         {
-            
+
             if (input[i] == Delimiter)
             {
                 tokens.Add(input.Substring(previousTab + 1, LettersToTake));
                 LettersToTake = 0;
                 previousTab = i;
             }
-            else if(i == input.Length - 1)
+            else if (i == input.Length - 1)
             {
                 tokens.Add(input.Substring(previousTab + 1, LettersToTake + 1));
             }

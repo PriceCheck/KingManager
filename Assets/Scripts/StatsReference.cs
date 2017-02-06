@@ -6,9 +6,11 @@ using System.Collections;
 
 public enum UnitType { Foot_Solider, Archer, Length };
 
+[System.Serializable]
 public static class StatsReference
  {
-	public struct UnitStats {
+
+	 [System.Serializable]	public struct UnitStats {
 		public int Hit_Points;
 		public int Damage;
 		public int Accuracy;
@@ -50,13 +52,20 @@ public static class StatsReference
 		"," + stats.Can_Be_Hit_Ranged + 
 		"}";
 	}
-   /* public static bool isEqual (UnitStats lhs, UnitStats rhs)
-    {
-        if( 
-          //  lhs.Name == rhs.Name &&
-            
-            )
-        { }
-        return false;
-    }*/
+
+	public static bool isEqual (UnitStats lhs, UnitStats rhs) {
+if ( lhs.Name == rhs.Name && 
+		lhs.Hit_Points == rhs.Hit_Points && 
+		lhs.Damage == rhs.Damage && 
+		lhs.Accuracy == rhs.Accuracy && 
+		lhs.Size == rhs.Size && 
+		lhs.Speed == rhs.Speed && 
+		lhs.Name == rhs.Name && 
+		lhs.Is_Ranged == rhs.Is_Ranged && 
+		lhs.Can_Be_Hit_Ground == rhs.Can_Be_Hit_Ground && 
+		lhs.Can_Be_Hit_Ranged == rhs.Can_Be_Hit_Ranged)
+	 	{ return true; } 
+	return false;
+	}
+
 }

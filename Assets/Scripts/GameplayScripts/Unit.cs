@@ -1,25 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Unit : MonoBehaviour{
+[System.Serializable]
+public class Unit {
     public UnitType type;
     public StatsReference.UnitStats thisUnitStat;
+    [System.NonSerialized]
     public UnitVisualizer myVisualizer;
     // Use this for initialization
     public Unit(UnitType thisType)
     {
         type = thisType;
         thisUnitStat = StatsReference.UnitStatsArray[(int)thisType];
-    }
-
-    //Returns false if the unit is default
-    public bool Serialize(out string output)
-    {
-     //   if(thisUnitStat == StatsReference.UnitStatsArray[(int)type])
-        {
-            output = null;
-            return false;
-        }
     }
 
     public void TakeDamage(int Damage)
@@ -38,7 +30,7 @@ public class Unit : MonoBehaviour{
 
     public void Attack(Unit Target)
     {
-        Debug.Log(thisUnitStat.Name + " Attacks " + Target.thisUnitStat.Name);
+        //Debug.Log(thisUnitStat.Name + " Attacks " + Target.thisUnitStat.Name);
         if (thisUnitStat.Hit_Points > 0)
         {
             int ToHit = Random.Range(0, 100);

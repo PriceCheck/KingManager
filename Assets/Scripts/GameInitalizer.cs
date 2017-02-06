@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VillageRoadSegment : MonoBehaviour {
-    public VillageNode[] connectedVillages = new VillageNode[2];
+public class GameInitalizer : MonoBehaviour {
+
 	// Use this for initialization
 	void Start () {
 		
 	}
+
+    void Awake()
+    {
+        if(Game.current == null)
+        {
+            Game.current = new Game();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
