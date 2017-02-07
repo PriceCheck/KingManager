@@ -50,8 +50,6 @@ public class HighlightOnHover : MonoBehaviour
     void CleanUp()
     {
         CurrentCoroutine = null;
-
-        Color CurrentColor = StartingColor;
         time = Mathf.Clamp(time, 0, AnimationTime);
         SetColor(Vector4.Lerp(StartingColor, HighlightColor, time / AnimationTime));
     }
@@ -76,7 +74,6 @@ public class HighlightOnHover : MonoBehaviour
 
     IEnumerator Animation()
     {
-        Color CurrentColor = HighlightColor;
         
         while (time >= 0 && time <= AnimationTime)
         {

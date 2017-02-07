@@ -1,35 +1,73 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using com.ootii.Messages;
 
 public class MapConnector : MonoBehaviour
 {
     public static MapConnector instance;
     public int[][] ConnectionGraph = null;
-    VillageNode[] currentVillages;
+  //  ConnectionInfo[] allConnections;
+    [HideInInspector]
+    public VillageNode[] currentVillages;
     VillageRoadSegment[] currentRoads;
+    int numVillagesSelected = 0;
+    VillageNode[] VillagesSelected = new VillageNode[2];
     // Use this for initialization
     void Start()
     {
         instance = this;
+        MessageDispatcher.AddListener("INPUT_ObjectClicked", CheckClick);
         StartCoroutine(WaitForFixed());
     }
 
-    void NodeClicked()
+    public void NodeClicked(VillageNode clickedNode)
     {
-        //TODO:
+        print("NodeClicked!");
         //If path has been found already, clear nodes clicked
+        if (numVillagesSelected == 2)
+        { 
+            ClearNodesClicked();
+        }
         //When node clicked, add it to a list
-        
+        VillagesSelected[numVillagesSelected] = clickedNode;
+        ++numVillagesSelected;
         //If a node has already been clicked, Calculate the path beteewn the nodes
+        if(numVillagesSelected == 2)
+        {
+            print("Printing Path");
+            PrintPath(Djikstra(VillagesSelected[0].ID, VillagesSelected[1].ID));
+        }
         //Print the path
         
     }
 
+    void CheckClick(IMessage mess)
+    {
+        GameObject lastObjHit = (GameObject)mess.Data;
+        if(numVillagesSelected > 0 && !lastObjHit.GetComponent<VillageNode>())
+        {
+            ClearNodesClicked();
+        }
+    }
+
+
     void ClearNodesClicked()
     {
-        //ToDo:
+       // print("NodesCleared");
         //Clear nodes from the list
+        if (VillagesSelected[0])
+        {
+            VillagesSelected[0].isUnhighlit();
+            //Array Slot 1 will only be filled if 0 is
+            if (VillagesSelected[1])
+            {
+                VillagesSelected[1].isUnhighlit();
+            }
+        }
+        VillagesSelected[0] = null;
+        VillagesSelected[1] = null;
+        numVillagesSelected = 0;
         
     }
 
@@ -38,7 +76,8 @@ public class MapConnector : MonoBehaviour
         currentVillages = FindObjectsOfType<VillageNode>();
         currentRoads = FindObjectsOfType<VillageRoadSegment>();
         PopulateConnectionGraph();
-        //PrintConnectionGraph();
+        
+        PrintConnectionGraph();
     }
 
     IEnumerator WaitForFixed()
@@ -111,7 +150,18 @@ public class MapConnector : MonoBehaviour
         }
         return output.ToArray();
     }
- 
+    
+    void PrintPath(int[] VertexPath)
+    {
+        string output = "(" + VertexPath[0];
+        for(int i = 1; i < VertexPath.Length; ++i)
+        {
+           output += "->" + VertexPath[i];
+        }
+        output += ")";
+        print(output);
+       
+    }
     void PopulateConnectionGraph()
     {
         ConnectionGraph = new int[currentVillages.Length][];
@@ -126,10 +176,12 @@ public class MapConnector : MonoBehaviour
 
         for (int i = 0; i < currentVillages.Length; ++i)
         {
-            for(int j = 0; j < currentVillages[i].ConnectedNodes.Length; ++j)
+            print(currentVillages[i].name + ": " + currentVillages[i].currentConnectedVillages);
+            for (int j = 0; j < currentVillages[i].currentConnectedVillages; ++j)
             {
-                ConnectionGraph[currentVillages[i].ID][currentVillages[i].ConnectedNodes[j].ID]
-                    = currentVillages[i].NodeCosts[j];
+                print("Cost: " + currentVillages[j].Connections[j].Cost);
+                ConnectionGraph[currentVillages[i].ID][currentVillages[i].Connections[j].VillageNodeID]
+                    = currentVillages[i].Connections[j].Cost;
             }
         }
     }

@@ -2,37 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct PathInfo
+[System.Serializable]
+public struct ConnectionInfo
 {
     public int VillageNodeID;
     public int ArrayElementToStartAt;
+    public int Cost;
     public VillageRoadSegment Road;
 }
 
+[System.Serializable]
 public class VillageNode : MonoBehaviour {
-    [HideInInspector]
-    public static List<VillageNode> AllNodes = new List<VillageNode>();
-    [HideInInspector]
     public int ID;
-    static int NextID = 0;
-    public VillageNode[] ConnectedNodes;
-    List<PathInfo> Roads;
+    [SerializeField]
+    public ConnectionInfo[] Connections;
+    [HideInInspector]
+    [SerializeField]
+    public int currentConnectedVillages = 0;
     public Material[] NodeColors = new Material[2]; // Highlit & non-Highlit
-    public int[] NodeCosts;
 	// Use this for initialization
-	void Start () {
-        AllNodes.Add(this);
-        ID = NextID++;
-	}
-	
-    public void AddRoad(PathInfo info)
+    public void AddRoad(ConnectionInfo info)
     {
-        Roads.Add(info);
+        if (Connections.Length == currentConnectedVillages)
+        {
+            ConnectionInfo[] newArray = new ConnectionInfo[Connections.Length * 2];
+            for(int i = 0; i < Connections.Length; ++i)
+            {
+                newArray[i] = Connections[i];
+            }
+            Connections = newArray;
+        }
+        Connections[currentConnectedVillages] = new ConnectionInfo();
+        Connections[currentConnectedVillages] = info;
+        Connections[currentConnectedVillages++].ArrayElementToStartAt = GetClosestIndex(transform.position, info.Road);
+      
+     //   print(this.gameObject.name + " info: " + Connections[currentConnectedVillages -1].Cost + ", " + Connections[currentConnectedVillages -1].VillageNodeID + ", " + currentConnectedVillages);
     }
 
+    public void isHighlit()
+    {
+        GetComponent<MeshRenderer>().material = NodeColors[0];
+    }
+
+    public void isUnhighlit()
+    {
+        GetComponent<MeshRenderer>().material = NodeColors[1];
+    }
+
+    public void Clicked()
+    {
+        MapConnector.instance.NodeClicked(this);
+    }
+    /*
     public bool RoadToTravel(int Destination, out int StartingElement, out VillageRoadSegment RoadToTravel)
     {
-        foreach(PathInfo road in Roads)
+        foreach(ConnectionInfo road in Connections)
         {
             if(Destination == road.VillageNodeID)
             {
@@ -46,7 +70,19 @@ public class VillageNode : MonoBehaviour {
         return false;
     }
 
-    int GetClosestIndex(Vector3 Position, VillageRoadSegment seg)
+    public int findConnectionCost(int ID)
+    {
+        foreach(ConnectionInfo info in Connections)
+        {
+            if(info.VillageNodeID == ID)
+            {
+                return info.Cost;
+            }
+        }
+        return -1;
+    }
+    */
+    public int GetClosestIndex(Vector3 Position, VillageRoadSegment seg)
     {
         int bestSoFar = -1;
         float bestDistSoFar = float.MaxValue;
@@ -57,18 +93,9 @@ public class VillageNode : MonoBehaviour {
             if(bestDistSoFar < Vector3.Distance(Position, positions[i]))
             {
                 bestSoFar = i;
-                bestDistSoFar = Vector3.Distance(Position, positions[i])
+                bestDistSoFar = Vector3.Distance(Position, positions[i]);
             }
         }
         return bestSoFar;
     }
-
-    void Reset()
-    {
-        NextID = 0;
-    }
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

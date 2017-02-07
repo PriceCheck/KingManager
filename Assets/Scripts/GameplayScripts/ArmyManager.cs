@@ -63,7 +63,7 @@ public class ArmyManager : MonoBehaviour {
 
     public void SpawnExistingArmy(Army army)
     {
-        GameObject repsentation = Instantiate(ArmyPrefab, VillageNode.AllNodes[army.CurrentLocation].transform.position, Quaternion.identity);
+        GameObject repsentation = Instantiate(ArmyPrefab, MapConnector.instance.currentVillages[army.CurrentLocation].transform.position, Quaternion.identity);
         army.Repsentation = repsentation;
         Unit[] array = army.UnitsInArmy.ToArray();
         for(int i = 0; i < array.Length; ++i)

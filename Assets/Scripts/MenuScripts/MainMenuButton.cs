@@ -33,7 +33,6 @@ public class MainMenuButton : MonoBehaviour {
     readonly float slowdownFactor = 2;
     AnimationCurve CurrentCurve;
     Vector3 StartingPosition;
-    bool isHighlit = false;
     IEnumerator CurrentCoroutine = null;
     float time = 0;
     float AnimationTime = 0.5f;
@@ -100,6 +99,10 @@ public class MainMenuButton : MonoBehaviour {
 
     void ClackTest(Vector3 Position)
     {
+        if(!CanPlayAudio)
+        {
+            return;
+        }
         if(Vector3.Distance(StartingPosition, Position) < 0.05)
         {
             if (HasGoneAbove && ButtonDrop && !ButtonDrop.isPlaying)
@@ -119,7 +122,6 @@ public class MainMenuButton : MonoBehaviour {
 
     public void IsHighlit()
     {
-        isHighlit = true;
         DTmultiplier = -1;
         CanPlayAudio = true;
         CurrentCurve = MoveUpMotion;
@@ -134,7 +136,6 @@ public class MainMenuButton : MonoBehaviour {
 
     public void IsUnHighlit()
     {
-        isHighlit = false;
         DTmultiplier = 1;
         if (ButtonPickup && !ButtonPickup.isPlaying)
         {
