@@ -33,8 +33,8 @@ public class VillageNode : MonoBehaviour {
             Connections = newArray;
         }
         Connections[currentConnectedVillages] = new ConnectionInfo();
-        Connections[currentConnectedVillages] = info;
-        Connections[currentConnectedVillages++].ArrayElementToStartAt = GetClosestIndex(transform.position, info.Road);
+        Connections[currentConnectedVillages++] = info;
+       // Connections[currentConnectedVillages++].ArrayElementToStartAt = GetClosestIndex(transform.position, info.Road);
       
      //   print(this.gameObject.name + " info: " + Connections[currentConnectedVillages -1].Cost + ", " + Connections[currentConnectedVillages -1].VillageNodeID + ", " + currentConnectedVillages);
     }
@@ -86,6 +86,7 @@ public class VillageNode : MonoBehaviour {
     {
         int bestSoFar = -1;
         float bestDistSoFar = float.MaxValue;
+        //print(seg.GetComponent<LineRenderer>());
         Vector3[] positions = new Vector3[seg.GetComponent<LineRenderer>().numPositions];
         seg.GetComponent<LineRenderer>().GetPositions(positions);
         for (int i = 0; i < positions.Length; ++i)

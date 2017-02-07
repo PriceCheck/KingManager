@@ -12,12 +12,7 @@ public class RoadMakerEditor : Editor {
         RoadMaker script = (RoadMaker)target;
         if (GUILayout.Button("RefreshConnections"))
         {
-            VillageNode[] allVillages = FindObjectsOfType<VillageNode>();
-            for (int i = 0; i < allVillages.Length; ++i)
-            {
-                SerializedObject obj = new UnityEditor.SerializedObject(allVillages[i].GetComponent<VillageNode>());
-                script.RecalulateConnections(obj);
-            }
+            script.RecalulateConnections();
         }
         base.OnInspectorGUI();
         if (GUILayout.Button("Build Road"))
