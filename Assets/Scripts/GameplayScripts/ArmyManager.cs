@@ -55,6 +55,7 @@ public class ArmyManager : MonoBehaviour {
         Army newArmy = new Army();
         GameObject repsentation = Instantiate(ArmyPrefab, CurrentNode.transform.position, Quaternion.identity);
         newArmy.Repsentation = repsentation;
+        repsentation.GetComponent<ArmyRepresentation>().myArmy = newArmy;
         newArmy.CurrentLocation = CurrentNode.ID;
         newArmy.UnitsInArmy = StartingUnits;
 

@@ -7,7 +7,7 @@ using System;
 public class MapConnector : MonoBehaviour
 {
     public static MapConnector instance;
-    public int[][] ConnectionGraph = null;
+    public float[][] ConnectionGraph = null;
     //  ConnectionInfo[] allConnections;
     [HideInInspector]
     public VillageNode[] currentVillages;
@@ -25,7 +25,6 @@ public class MapConnector : MonoBehaviour
 
     public void NodeClicked(VillageNode clickedNode)
     {
-        print("NodeClicked! " + clickedNode.ID);
         //If path has been found already, clear nodes clicked
         if (numVillagesSelected >= 2 || (numVillagesSelected == 1 && VillagesSelected[0].ID == clickedNode.ID))
         {
@@ -40,8 +39,7 @@ public class MapConnector : MonoBehaviour
         {
             CurrentVertexList = new int[2];
             CurrentVertexList = Djikstra(VillagesSelected[0].ID, VillagesSelected[1].ID);
-            print("Path Found!");
-            PrintPath(CurrentVertexList);
+            //PrintPath(CurrentVertexList);
             HighlightPath(CurrentVertexList);
 
         }
@@ -97,14 +95,20 @@ public class MapConnector : MonoBehaviour
 
     }
 
+    public void UpdateConnectionGraph(VillageRoadSegment road)
+    {
+        ConnectionGraph[road.connectedVillages[0].ID][road.connectedVillages[1].ID] = road.Cost;
+        ConnectionGraph[road.connectedVillages[1].ID][road.connectedVillages[0].ID] = road.Cost;
+    }
+
     void init()
     {
         currentVillages = FindObjectsOfType<VillageNode>();
         currentRoads = FindObjectsOfType<VillageRoadSegment>();
         PopulateConnectionGraph();
-        Array.Sort(currentVillages, delegate (VillageNode x, VillageNode y) {return x.ID - y.ID; });
+        Array.Sort(currentVillages, delegate (VillageNode x, VillageNode y) { return x.ID - y.ID; });
 
-        PrintConnectionGraph();
+        //PrintConnectionGraph();
     }
 
     IEnumerator WaitForFixed()
@@ -120,7 +124,7 @@ public class MapConnector : MonoBehaviour
         public float Distance;
     }
     //Doing Goddamn Djikstra
-    int[] Djikstra(int StartingPoint, int Destination)
+    public int[] Djikstra(int StartingPoint, int Destination)
     {
         Node[] VertexList = new Node[ConnectionGraph.Length];
         List<int> NodesToVisit = new List<int>(ConnectionGraph.Length);
@@ -156,7 +160,7 @@ public class MapConnector : MonoBehaviour
                     VertexList[i].Distance = ConnectionGraph[nextNode][i];
                     VertexList[i].previousNode = nextNode;
                     if (i == Destination)
-                    {
+                    { 
                         return GetPathFromDestination(VertexList, Destination);
                     }
                 }
@@ -182,7 +186,7 @@ public class MapConnector : MonoBehaviour
 
     void PrintPath(int[] VertexPath)
     {
-        if(VertexPath == null || VertexPath.Length == 0)
+        if (VertexPath == null || VertexPath.Length == 0)
         {
             return;
         }
@@ -197,10 +201,10 @@ public class MapConnector : MonoBehaviour
     }
     void PopulateConnectionGraph()
     {
-        ConnectionGraph = new int[currentVillages.Length][];
+        ConnectionGraph = new float[currentVillages.Length][];
         for (int i = 0; i < ConnectionGraph.Length; ++i)
         {
-            ConnectionGraph[i] = new int[currentVillages.Length];
+            ConnectionGraph[i] = new float[currentVillages.Length];
             for (int j = 0; j < ConnectionGraph[i].Length; ++j)
             {
                 ConnectionGraph[i][j] = -1;

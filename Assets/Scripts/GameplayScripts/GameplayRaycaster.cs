@@ -24,7 +24,13 @@ public class GameplayRaycaster : MonoBehaviour {
             {
                 ClickedLogic();
             }
-
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (LastObjectHit != null)
+            {
+                ClickedLogic();
+            }
         }
     }
     void HighlightingLogic()
@@ -50,8 +56,6 @@ public class GameplayRaycaster : MonoBehaviour {
 
     void ClickedLogic()
     {
-        //take Last object Hit
-        //LastObjectHit;
         // Template
         //if(hit.collider.gameObject.GetComponent</*ComponentNameHere*/>())
         //LastObjectHit.GetComponent<>().Clicked();
@@ -60,6 +64,15 @@ public class GameplayRaycaster : MonoBehaviour {
           LastObjectHit.GetComponent<VillageNode>().Clicked();
         }
         MessageDispatcher.SendMessage(this, "INPUT_ObjectClicked", LastObjectHit, 0);
+    }
+
+    void RightClickedLogic()
+    {
+        if (hit.collider.gameObject.GetComponent<VillageNode>())
+        {
+           // LastObjectHit.GetComponent<VillageNode>().RightClicked();
+        }
+        MessageDispatcher.SendMessage(this, "INPUT_ObjectRightClicked", LastObjectHit, 0);
     }
 
     public bool LastObjectHasType<T>()

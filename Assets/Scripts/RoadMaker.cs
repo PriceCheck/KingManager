@@ -38,6 +38,10 @@ public class RoadMaker : MonoBehaviour {
         {
             villages[i].currentConnectedVillages = 0;
         }
+        for(int i = 0; i < roads.Length; ++i)
+        {
+            roads[i].RecalcuateCost();
+        }
 
         for(int i = 0; i < roads.Length; ++i)
         {
@@ -46,11 +50,11 @@ public class RoadMaker : MonoBehaviour {
             newInfo.Road = roads[i];
             //Setting info in starting node
             newInfo.VillageNodeID = roads[i].connectedVillages[1].ID;
-            newInfo.ArrayElementToStartAt = roads[i].connectedVillages[0].GetClosestIndex(roads[i].connectedVillages[0].transform.position, newInfo.Road);
+            newInfo.ArrayElementToStartAt = -1;//roads[i].connectedVillages[0].GetClosestIndex(roads[i].connectedVillages[0].transform.position, newInfo.Road);
             roads[i].connectedVillages[0].AddRoad(newInfo);
             //Setting info in ending node
             newInfo.VillageNodeID = roads[i].connectedVillages[0].ID;
-            newInfo.ArrayElementToStartAt = roads[i].connectedVillages[1].GetClosestIndex(roads[i].connectedVillages[1].transform.position, newInfo.Road);
+            newInfo.ArrayElementToStartAt = -1;//roads[i].connectedVillages[1].GetClosestIndex(roads[i].connectedVillages[1].transform.position, newInfo.Road);
             roads[i].connectedVillages[1].AddRoad(newInfo);
         }
     }

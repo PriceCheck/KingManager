@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public struct ConnectionInfo
 {
     public int VillageNodeID;
     public int ArrayElementToStartAt;
-    public int Cost;
+    public float Cost;
     public VillageRoadSegment Road;
 }
 
@@ -49,7 +50,24 @@ public class VillageNode : MonoBehaviour {
 
     }
 
-
+    public Vector3[] PathToNextNode(int ID)
+    {
+        for(int i = 0; i < Connections.Length; ++i)
+        {
+            if(Connections[i].VillageNodeID == ID)
+            {
+                Vector3[] newArray = new Vector3[Connections[i].Road.GetComponent<LineRenderer>().numPositions]; 
+                Connections[i].Road.GetComponent<LineRenderer>().GetPositions(newArray);
+                if (GetClosestIndex(transform.position, Connections[i].Road) != 0)
+                {
+                    Array.Reverse(newArray);
+                }
+                return newArray;
+            }
+        }
+        //Should never reach here
+        return null;
+    }
 
     public void isUnhighlit()
     {
@@ -70,10 +88,7 @@ public class VillageNode : MonoBehaviour {
 
     public void Clicked()
     {
-
         MapConnector.instance.NodeClicked(this);
-        
-
     }
     /*
     public bool RoadToTravel(int Destination, out int StartingElement, out VillageRoadSegment RoadToTravel)
@@ -113,7 +128,7 @@ public class VillageNode : MonoBehaviour {
         seg.GetComponent<LineRenderer>().GetPositions(positions);
         for (int i = 0; i < positions.Length; ++i)
         {
-            if(bestDistSoFar < Vector3.Distance(Position, positions[i]))
+            if(bestDistSoFar > Vector3.Distance(Position, positions[i]))
             {
                 bestSoFar = i;
                 bestDistSoFar = Vector3.Distance(Position, positions[i]);
