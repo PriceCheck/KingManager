@@ -19,7 +19,7 @@ public class VillageNode : MonoBehaviour {
     [HideInInspector]
     [SerializeField]
     public int currentConnectedVillages = 0;
-    public Material[] NodeColors = new Material[2]; // Highlit & non-Highlit
+    public Material[] NodeColors = new Material[3]; // Highlit & non-Highlit
 	// Use this for initialization
     public void AddRoad(ConnectionInfo info)
     {
@@ -39,19 +39,41 @@ public class VillageNode : MonoBehaviour {
      //   print(this.gameObject.name + " info: " + Connections[currentConnectedVillages -1].Cost + ", " + Connections[currentConnectedVillages -1].VillageNodeID + ", " + currentConnectedVillages);
     }
 
+    public void isInPath()
+    {
+        print("Node: " + ID + " Added to path");
+        GetComponent<MeshRenderer>().material = NodeColors[2];
+    }
     public void isHighlit()
     {
-        GetComponent<MeshRenderer>().material = NodeColors[0];
+
     }
+
+
 
     public void isUnhighlit()
     {
+        
+    }
+
+    public void isUnselected()
+    {
+        print("Node: " + ID + " Unselected");
+        GetComponent<MeshRenderer>().material = NodeColors[0];
+    }
+
+    public void IsSelected()
+    {
+        print("Node: " + ID + " Selected");
         GetComponent<MeshRenderer>().material = NodeColors[1];
     }
 
     public void Clicked()
     {
+
         MapConnector.instance.NodeClicked(this);
+        
+
     }
     /*
     public bool RoadToTravel(int Destination, out int StartingElement, out VillageRoadSegment RoadToTravel)
