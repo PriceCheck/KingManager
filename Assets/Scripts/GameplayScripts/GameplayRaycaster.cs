@@ -67,7 +67,7 @@ public class GameplayRaycaster : MonoBehaviour {
         // Template
         //if(hit.collider.gameObject.GetComponent</*ComponentNameHere*/>())
         //LastObjectHit.GetComponent<>().Clicked();
-        if (hit.collider.gameObject.GetComponent<VillageNode>())
+      //  if (hit.collider.gameObject.GetComponent<VillageNode>())
         { 
           //LastObjectHit.GetComponent<VillageNode>().Clicked();
         }

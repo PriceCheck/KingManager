@@ -115,7 +115,7 @@ public class ClickingManager : ScriptableObject {
         storedClicks[1] = storedClicks[0];
         storedClicks[0] = newEvent;
         //DEBUG
-        PrintClickLog();
+       // PrintClickLog();
 
         if(!CheckForExistingPatterns(DoubleClickPatterns, 0))
         {
