@@ -69,6 +69,11 @@ public class Army {
         MoveDelta = EndMovePoint - StartMovePoint;
     }
 
+    public void IsSelected()
+    {
+        Repsentation.GetComponent<ArmyRepresentation>().IsSelected();
+    }
+
     void UpdateMovement()
     {
         timer += TimeController.SmoothDTthisframe * MoveSpeedRateChange.Evaluate(MoveSpeed);

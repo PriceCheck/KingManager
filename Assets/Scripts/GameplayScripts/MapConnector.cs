@@ -16,6 +16,7 @@ public class MapConnector : MonoBehaviour
     VillageNode[] VillagesSelected = new VillageNode[2];
     int[] CurrentVertexList = null;
     // Use this for initialization
+
     void Start()
     {
         instance = this;
@@ -32,7 +33,7 @@ public class MapConnector : MonoBehaviour
         }
         //When node clicked, add it to a list
         VillagesSelected[numVillagesSelected] = clickedNode;
-        clickedNode.IsSelected();
+        //clickedNode.IsSelected();
         ++numVillagesSelected;
         //If a node has already been clicked, Calculate the path beteewn the nodes
         if (numVillagesSelected == 2)
@@ -72,7 +73,7 @@ public class MapConnector : MonoBehaviour
         {
             for (int i = 0; i < CurrentVertexList.Length; ++i)
             {
-                currentVillages[CurrentVertexList[i]].isUnselected();
+               // currentVillages[CurrentVertexList[i]].isUnselected();
             }
 
         }
@@ -80,11 +81,11 @@ public class MapConnector : MonoBehaviour
         {
             if (VillagesSelected[0])
             {
-                VillagesSelected[0].isUnselected();
+               // VillagesSelected[0].isUnselected();
                 //Array Slot 1 will only be filled if 0 is
                 if (VillagesSelected[1])
                 {
-                    VillagesSelected[1].isUnselected();
+                   // VillagesSelected[1].isUnselected();
                 }
             }
         }

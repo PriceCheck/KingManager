@@ -7,6 +7,13 @@ public class GameplayRaycaster : MonoBehaviour {
     Ray ray;
     RaycastHit hit;
     GameObject LastObjectHit;
+
+
+    void Start()
+    {
+        ClickingManager.CreateInstance<ClickingManager>();
+    }
+
     void Update()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -15,6 +22,9 @@ public class GameplayRaycaster : MonoBehaviour {
             if (LastObjectHit != hit.collider.gameObject)
             {
                 HighlightingLogic();
+
+                LastObjectHit = hit.collider.gameObject;
+
             }
 
         }
@@ -29,7 +39,7 @@ public class GameplayRaycaster : MonoBehaviour {
         {
             if (LastObjectHit != null)
             {
-                ClickedLogic();
+                RightClickedLogic();
             }
         }
     }
@@ -42,16 +52,14 @@ public class GameplayRaycaster : MonoBehaviour {
             // if (LastObjectHit.GetComponent</*ComponentNameHere*/>())
             // LastObjectHit.GetComponent<>().isUnhighlit();
             
-            if (LastObjectHit.GetComponent<VillageNode>())
-                LastObjectHit.GetComponent<VillageNode>().isUnhighlit();
+         //   if (LastObjectHit.GetComponent<VillageNode>())
+             //   LastObjectHit.GetComponent<VillageNode>().isUnhighlit();
         }
         // Template
         //if(hit.collider.gameObject.GetComponent</*ComponentNameHere*/>())
         //    hit.collider.gameObject.GetComponent<MainMenuButton>().isHighlit();
-        if(hit.collider.gameObject.GetComponent<VillageNode>())
-            hit.collider.gameObject.GetComponent<VillageNode>().isHighlit();
-
-        LastObjectHit = hit.collider.gameObject;
+       // if(hit.collider.gameObject.GetComponent<VillageNode>())
+           // hit.collider.gameObject.GetComponent<VillageNode>().isHighlit();
     }
 
     void ClickedLogic()
@@ -61,7 +69,7 @@ public class GameplayRaycaster : MonoBehaviour {
         //LastObjectHit.GetComponent<>().Clicked();
         if (hit.collider.gameObject.GetComponent<VillageNode>())
         { 
-          LastObjectHit.GetComponent<VillageNode>().Clicked();
+          //LastObjectHit.GetComponent<VillageNode>().Clicked();
         }
         MessageDispatcher.SendMessage(this, "INPUT_ObjectClicked", LastObjectHit, 0);
     }

@@ -20,6 +20,12 @@ public class ArmyRepresentation : MonoBehaviour {
         }
     }
 
+    public void MoveToVillage(int ID)
+    {
+        print("MoveToVillage");
+        myArmy.MoveToVillage(ID);
+    }
+
     public void toConsole(string output)
     {
         print(output);
@@ -37,6 +43,7 @@ public class ArmyRepresentation : MonoBehaviour {
 
     public void IsSelected()
     {
+       // print("IsSelected");
         GetComponent<MeshRenderer>().material = PieceColors[1];
     }
 

@@ -82,13 +82,14 @@ public class VillageNode : MonoBehaviour {
 
     public void IsSelected()
     {
-        print("Node: " + ID + " Selected");
+        //print("Node: " + ID + " Selected");
         GetComponent<MeshRenderer>().material = NodeColors[1];
     }
 
     public void Clicked()
     {
-        MapConnector.instance.NodeClicked(this);
+        IsSelected();
+        //MapConnector.instance.NodeClicked(this);
     }
     /*
     public bool RoadToTravel(int Destination, out int StartingElement, out VillageRoadSegment RoadToTravel)
