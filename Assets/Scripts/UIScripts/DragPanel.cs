@@ -6,10 +6,17 @@ using UnityEngine.EventSystems;
 
 public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
+    public float xOffSet;
+    public float yOffSet;
     Vector2 pointerOffset;
     RectTransform panelRectTransform;
     RectTransform canvasRectTransform;
     Canvas canvas;
+
+    void Start()
+    {
+
+    }
 
     void Awake()
     {
@@ -18,6 +25,8 @@ public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
         {
             canvasRectTransform = canvas.GetComponent<RectTransform>();
             panelRectTransform = GetComponent<RectTransform>();
+            xOffSet = ((panelRectTransform.rect.width * canvas.scaleFactor) / 2);
+            yOffSet = ((panelRectTransform.rect.height * canvas.scaleFactor) / 2);
         }
     }
 
@@ -52,9 +61,6 @@ public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler
 
         Vector3[] canvasCorners = new Vector3[4];
         canvasRectTransform.GetWorldCorners(canvasCorners);
-
-        float xOffSet = ((panelRectTransform.rect.width * canvas.scaleFactor) / 2);
-        float yOffSet = ((panelRectTransform.rect.height * canvas.scaleFactor) / 2);
 
         float clampedX = Mathf.Clamp(rawPointerPosition.x, canvasCorners[0].x + xOffSet, canvasCorners[2].x - xOffSet);
         float clampedY = Mathf.Clamp(rawPointerPosition.y, canvasCorners[0].y + yOffSet, canvasCorners[2].y - yOffSet);

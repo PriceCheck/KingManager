@@ -4,6 +4,7 @@ using UnityEngine;
 using com.ootii.Messages;
 
 public class GameplayRaycaster : MonoBehaviour {
+    public static GameplayRaycaster inst;
     Ray ray;
     RaycastHit hit;
     GameObject LastObjectHit;
@@ -12,9 +13,10 @@ public class GameplayRaycaster : MonoBehaviour {
     void Start()
     {
         ClickingManager.CreateInstance<ClickingManager>();
+        inst = this;
     }
 
-    void Update()
+    public void UpdateGameplay()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
