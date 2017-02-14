@@ -11,18 +11,53 @@ public struct ArmyComp
 }
 
 public class ArmyManager : MonoBehaviour {
+    public static ArmyManager inst = null;
+    static int nextID = 0;
+    public int ID;
     public Vector3 FriendlyStartingPos = Vector3.zero;
     public Vector3 EnemyStartingPos = Vector3.zero;
     public Sprite[] UnitSprites;
     public GameObject BaseUnit;
     public GameObject ArmyPrefab;
+    //each village has an army
+    //Any units that spawn in a 
+
+    public void SpawnUnit(int villageID, UnitType type, int count)
+    {
+        int foundVillage = -1;
+        for(int i = 0; i < Game.current.AllArmies.Count; ++i)
+        {
+            if(Game.current.AllArmies[i].CurrentLocation == villageID && !Game.current.AllArmies[i].isMoving)
+            {
+                foundVillage = i;
+                break;
+            }
+        }
+
+        if(foundVillage == -1)
+        {
+            List<Unit> newUnits = new List<Unit>(5);
+            for (int i = 0; i < count; ++i)
+            {
+                newUnits.Add(new Unit(type));
+            }
+            SpawnNewArmy(Game.current.AllNodes[villageID], newUnits);
+        }
+        else
+        {
+            for (int i = 0; i < count; ++i)
+            {
+                Game.current.AllArmies[i].AddUnit(type);
+            }
+        }
+    }
 
     void Start()
     {
+        inst = this;
         MessageDispatcher.AddListener("SAVE_LoadGame", LoadArmies);
         MessageDispatcher.AddListener("SAVE_UnloadGame", UnloadArmies);
-    }
-    
+    }    
 
     void Update()
     {
@@ -39,15 +74,6 @@ public class ArmyManager : MonoBehaviour {
         {
             SaveGame.Load();
         }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Game.current.AllArmies[0].AddUnit(UnitType.Archer);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            Game.current.AllArmies[0].AddUnit(UnitType.Foot_Solider);
-        }
-
     }
     // Helpers
     public void SpawnNewArmy(VillageNode CurrentNode, List<Unit> StartingUnits)
@@ -58,7 +84,7 @@ public class ArmyManager : MonoBehaviour {
         repsentation.GetComponent<ArmyRepresentation>().myArmy = newArmy;
         newArmy.CurrentLocation = CurrentNode.ID;
         newArmy.UnitsInArmy = StartingUnits;
-
+        newArmy.ID = Game.current.AllArmies.Count;
         Game.current.AllArmies.Add(newArmy);
     }
 
@@ -67,10 +93,6 @@ public class ArmyManager : MonoBehaviour {
         GameObject repsentation = Instantiate(ArmyPrefab, MapConnector.instance.currentVillages[army.CurrentLocation].transform.position, Quaternion.identity);
         army.Repsentation = repsentation;
         Unit[] array = army.UnitsInArmy.ToArray();
-        for(int i = 0; i < array.Length; ++i)
-        {
-            print(array[i].type);
-        }
     }
 
     public void DestoryCurrentArmies()
@@ -80,6 +102,17 @@ public class ArmyManager : MonoBehaviour {
             Destroy(arm.Repsentation);
         }
         Game.current.AllArmies = null;
+    }
+
+    public void DestroyArmy(int ArmyID)
+    {
+        Destroy (Game.current.AllArmies[ArmyID].Repsentation);
+        Game.current.AllArmies.RemoveAt(ArmyID);
+        int i = 0;
+        foreach(Army arm in Game.current.AllArmies.ToArray())
+        {
+            arm.ID = i++;
+        }
     }
 
     void UnloadArmies(IMessage mess)

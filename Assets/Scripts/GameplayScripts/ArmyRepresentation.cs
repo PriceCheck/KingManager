@@ -10,19 +10,10 @@ public class ArmyRepresentation : MonoBehaviour {
     void Update()
     {
         myArmy.Update();
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            myArmy.MoveToVillage(1);
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            myArmy.MoveToVillage(2);
-        }
     }
 
     public void MoveToVillage(int ID)
-    {
-        print("MoveToVillage");
+    { 
         myArmy.MoveToVillage(ID);
     }
 
@@ -45,6 +36,12 @@ public class ArmyRepresentation : MonoBehaviour {
     {
        // print("IsSelected");
         GetComponent<MeshRenderer>().material = PieceColors[1];
+    }
+
+    public void Prnt(string output)
+
+    {
+        print(output);
     }
 
     public void Clicked()

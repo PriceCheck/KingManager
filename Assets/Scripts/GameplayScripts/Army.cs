@@ -4,6 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class Army {
+    public int ID;
     public List<Unit> UnitsInArmy;
     public int CurrentLocation;
     public int MoveSpeed = 8;
@@ -13,7 +14,7 @@ public class Army {
     int PathIndex = 0;
     Vector3[] WorldSpacePoints;
     int PointsIndex = 0;
-    bool isMoving = false;
+    public bool isMoving = false;
     float timer = 0;
     float TimeUntilNext = 0;
     Vector3 StartMovePoint;
@@ -39,6 +40,7 @@ public class Army {
     public void NextPathPoint()
     {
         ++PathIndex;
+        onEnterVillage(PathIndex);
         PointsIndex = 0;
         if(PathIndex >= Path.Length)
         {
@@ -68,12 +70,21 @@ public class Army {
         EndMovePoint = WorldSpacePoints[PointsIndex];
         MoveDelta = EndMovePoint - StartMovePoint;
     }
-
     public void IsSelected()
     {
         Repsentation.GetComponent<ArmyRepresentation>().IsSelected();
     }
-
+    void onEnterVillage(int Index)
+    {
+        CurrentLocation = Index;
+        foreach (Army arm in Game.current.AllArmies)
+        {
+            if (arm.CurrentLocation == CurrentLocation && !arm.isMoving)
+            {
+                MergeArmies(arm);
+            }
+        }
+    }
     void UpdateMovement()
     {
         timer += TimeController.SmoothDTthisframe * MoveSpeedRateChange.Evaluate(MoveSpeed);
@@ -99,20 +110,28 @@ public class Army {
             isMoving = false;
         }
     }
-
     void UpdatePosition()
     {
         Repsentation.transform.position = StartMovePoint + (MoveDelta * (timer / TimeUntilNext));
     }
-
     public void MoveToVillage(int ID)
-    { 
+    {
+        Repsentation.GetComponent<ArmyRepresentation>().Prnt("Movement Started");
         SetPath(MapConnector.instance.Djikstra(CurrentLocation, ID));
-    }
 
+    }
    public void AddUnit(UnitType type)
     {
         Unit newUnit = new Unit(type);
         UnitsInArmy.Add(newUnit);
     }
+    public void MergeArmies(Army rhs)
+    {
+        Repsentation.GetComponent<ArmyRepresentation>().Prnt("Attempt Merge");
+        UnitsInArmy.AddRange(rhs.UnitsInArmy);
+        Repsentation.GetComponent<ArmyRepresentation>().Prnt("Units Added");
+        ArmyManager.inst.DestroyArmy(rhs.ID);
+        Repsentation.GetComponent<ArmyRepresentation>().Prnt("Destroyed Army");
+    }
+
 }

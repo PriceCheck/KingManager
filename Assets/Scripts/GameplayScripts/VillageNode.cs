@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using com.ootii.Messages;
 
 [System.Serializable]
 public struct ConnectionInfo
@@ -13,15 +14,32 @@ public struct ConnectionInfo
 }
 
 [System.Serializable]
+public struct UnitTrainingInfo
+{
+    public UnitType unitType;
+    public int UnitCount;
+    public float currentTrainingTime;
+}
+
+[System.Serializable]
 public class VillageNode : MonoBehaviour {
+    public Queue<UnitTrainingInfo> queuedUnitsToTrain = new Queue<UnitTrainingInfo>(4);
+    public UnitTrainingInfo CurrentTrainingUnit;
+    string VillageName = "Test";
     public int ID;
+    [HideInInspector]
+    public bool IsTraining = false;
+    float timer = 0;
     [SerializeField]
     public ConnectionInfo[] Connections;
     [HideInInspector]
     [SerializeField]
     public int currentConnectedVillages = 0;
     public Material[] NodeColors = new Material[3]; // Highlit & non-Highlit
-	// Use this for initialization
+                                                    // Use this for initialization
+    void Awake()
+    {
+    }
     public void AddRoad(ConnectionInfo info)
     {
         if (Connections.Length == currentConnectedVillages)
@@ -39,7 +57,6 @@ public class VillageNode : MonoBehaviour {
       
      //   print(this.gameObject.name + " info: " + Connections[currentConnectedVillages -1].Cost + ", " + Connections[currentConnectedVillages -1].VillageNodeID + ", " + currentConnectedVillages);
     }
-
     public void isInPath()
     {
         print("Node: " + ID + " Added to path");
@@ -49,7 +66,6 @@ public class VillageNode : MonoBehaviour {
     {
 
     }
-
     public Vector3[] PathToNextNode(int ID)
     {
         for(int i = 0; i < Connections.Length; ++i)
@@ -68,24 +84,29 @@ public class VillageNode : MonoBehaviour {
         //Should never reach here
         return null;
     }
-
     public void isUnhighlit()
     {
         
     }
-
     public void isUnselected()
     {
         print("Node: " + ID + " Unselected");
         GetComponent<MeshRenderer>().material = NodeColors[0];
     }
-
     public void IsSelected()
     {
         //print("Node: " + ID + " Selected");
         GetComponent<MeshRenderer>().material = NodeColors[1];
     }
+    public void OpenThisUI()
+    {
 
+        WindowSpawnEvent output;
+        output.WindowSpawnLocation = Vector3.zero;
+        output.windowType = WindowTypes.VillageInfoScreen;
+        output.infoToFill = transform.gameObject;
+        MessageDispatcher.SendMessage(this, "UI_Spawn", output, 0);
+    }
     public void Clicked()
     {
         IsSelected();
@@ -136,5 +157,29 @@ public class VillageNode : MonoBehaviour {
             }
         }
         return bestSoFar;
+    }
+    public void TrainNewUnit(UnitTrainingInfo info)
+    {
+        if(queuedUnitsToTrain.Count < 4)
+        {
+            queuedUnitsToTrain.Enqueue(info);
+        }
+    }
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if(queuedUnitsToTrain.Count > 0 && !IsTraining)
+        {
+            IsTraining = true;
+            CurrentTrainingUnit = queuedUnitsToTrain.Dequeue();
+            timer = 0;
+        }
+        //ToDo: Change this to be less terrible
+        if(timer >= 0 && IsTraining)
+        {
+            ArmyManager.inst.SpawnUnit(ID,CurrentTrainingUnit.unitType,CurrentTrainingUnit.UnitCount);
+            IsTraining = false;
+        }
+
     }
 }

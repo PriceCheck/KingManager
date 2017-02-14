@@ -1,3 +1,3 @@
-"Name"	"Hit_Points"	"Damage"	"Accuracy"	"Size"	"Speed"	"Name"	"Is_Ranged"	"Can_Be_Hit_Ground"	"Can_Be_Hit_Ranged"
-"Foot_Solider"	5	2	75	1	5	"Foot Solider"	FALSE	TRUE	TRUE
-"Archer"	2	4	30	1	3	"Archer"	TRUE	TRUE	TRUE
+"Name"	"Hit_Points"	"Damage"	"Accuracy"	"Size"	"Speed"	"Name"	"Is_Ranged"	"Can_Be_Hit_Ground"	"Can_Be_Hit_Ranged"	"Train_Time"
+"Foot_Solider"	5	2	75	1	5	"Foot Solider"	FALSE	TRUE	TRUE	2.7
+"Archer"	2	4	30	1	3	"Archer"	TRUE	TRUE	TRUE	4.2

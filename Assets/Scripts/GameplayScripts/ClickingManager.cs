@@ -35,9 +35,10 @@ public class ClickingManager : ScriptableObject {
         new ClickEvent(ObjectType.Deselect, -1),
         new ClickEvent(ObjectType.Deselect, -1)
         };
-    public ClickPatternMethod[] KnownMethods = new ClickPatternMethod[5]
+    public ClickPatternMethod[] KnownMethods = new ClickPatternMethod[6]
         {   /* Double click Patterns*/
             new ClickPatternMethod(ArmyMoveEvent),
+            new ClickPatternMethod(OpenVillageUI),
             /* Deselect Patterns*/
             new ClickPatternMethod(DeselectArmy),
             new ClickPatternMethod(DeselectVillage),
@@ -46,8 +47,9 @@ public class ClickingManager : ScriptableObject {
           new ClickPatternMethod(SelectVillage)};
 
     //Patterns of clicking for stuff
-    ClickEvent[][] DoubleClickPatterns = new ClickEvent[1][] {
+    ClickEvent[][] DoubleClickPatterns = new ClickEvent[2][] {
         new ClickEvent[2] { new ClickEvent(ObjectType.Village, 1),  new ClickEvent(ObjectType.Army, 0) },
+        new ClickEvent[2] { new ClickEvent(ObjectType.Village, 0), new ClickEvent(ObjectType.Village, 0)}
     };
 
     ClickEvent[][] DeselectPatterns = new ClickEvent[2][]
@@ -115,13 +117,18 @@ public class ClickingManager : ScriptableObject {
         storedClicks[1] = storedClicks[0];
         storedClicks[0] = newEvent;
         //DEBUG
-       // PrintClickLog();
+        //PrintClickLog();
 
         if(!CheckForExistingPatterns(DoubleClickPatterns, 0))
         {
-            CheckForExistingPatterns(DeselectPatterns, DoubleClickPatterns.Length);
-            CheckForExistingPatterns(SingleClickPatterns, DoubleClickPatterns.Length + DeselectPatterns.Length);
+            SecondaryPatterns();
         }
+    }
+
+    void SecondaryPatterns()
+    {
+        CheckForExistingPatterns(DeselectPatterns, DoubleClickPatterns.Length);
+        CheckForExistingPatterns(SingleClickPatterns, DoubleClickPatterns.Length + DeselectPatterns.Length);
     }
 
     void PrintClickLog()
@@ -175,11 +182,24 @@ public class ClickingManager : ScriptableObject {
     }
 
     /*Delegate Functions*/
+    static void OpenVillageUI(ClickEvent[] Objects)
+    {
+        if(Objects[0].GameObject == Objects[0].GameObject)
+        {
+            Objects[0].GameObject.GetComponent<VillageNode>().OpenThisUI();
+        }
+        else
+        {
+            instance.SecondaryPatterns();
+        }
+        
+    }
+
     static void ArmyMoveEvent(ClickEvent[] Objects)
     {
         //Tell the army to move
         (Objects[1].GameObject.GetComponent<ArmyRepresentation>()).MoveToVillage(Objects[0].GameObject.GetComponent<VillageNode>().ID);
-        (Objects[1].GameObject.GetComponent<ArmyRepresentation>()).isUnselected();
+        instance.storedClicks[0] = instance.storedClicks[1];
     }
     static void SelectArmy(ClickEvent[] Objects)
     {
